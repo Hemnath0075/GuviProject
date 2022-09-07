@@ -6,8 +6,7 @@ require("dotenv").config();
 import { UserModel } from "../Models/User";
 
 import jwt from "jsonwebtoken";
-import userValidation from "../Validation/ValidateDetails";
-import passwordValidation from "../Validation/ValidateDetails";
+
 
 const Router = express.Router();
 
@@ -43,7 +42,7 @@ Router.post('/update',async(req,res)=>{
   }
 })
 
-Router.post("/signup", userValidation, async (req, res) => {
+Router.post("/signup", async (req, res) => {
   try {
     const alreadyUser = await UserModel.findOne({ email: req.body.email });
     if (alreadyUser) throw new Error("User already exists with this Email");
@@ -73,7 +72,7 @@ Router.post("/login", async (req, res) => {
       message: "loggedIn Successfully",
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message,error:"error is here" });
   }
 });
 
@@ -112,7 +111,7 @@ const validateResetToken = async (req, res, next) => {
   }
 }
 
-Router.post("/resetpassword/:token", validateResetToken, passwordValidation, async (req, res) => {
+Router.post("/resetpassword/:token",async (req, res) => {
   try {
     const resetPassword =await bcrypt.hash(req.body.password, 10);
     const updatePassword = await UserModel.findOneAndUpdate({resetToken:req.params.token},{password:resetPassword},{new:true});

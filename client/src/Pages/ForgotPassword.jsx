@@ -3,6 +3,11 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { forgotPassword, verifyToken } from "../redux/features/user";
 
+import 'react-toastify/dist/ReactToastify.css';
+import {toast,ToastContainer} from 'react-toastify';
+
+toast.configure();
+
 function ForgotPassword() {
   const navigate=useNavigate();
   const dispatch=useDispatch();
@@ -15,7 +20,23 @@ function ForgotPassword() {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(forgotPassword(user))
+    dispatch(forgotPassword(user)).then((value)=>{
+      console.log(value.meta.requestStatus)
+      if(value.meta.requestStatus==="fulfilled"){
+        console.log("success")
+        toast.success('Reset link Sent to Email Successfully', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+        navigate('/home');
+      }
+      else{
+        toast.error(value.payload.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+      }
+    })
   };
   useEffect(()=>{
     const token=localStorage.getItem("token");

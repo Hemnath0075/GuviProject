@@ -13,6 +13,8 @@
     "axios": "^0.27.2",
     "fabric": "^5.2.4",
     "fabricjs-react": "^1.0.8",
+    "joi": "^17.6.0",
+    "joi-browser": "^13.4.0",
     "postcss": "^8.4.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

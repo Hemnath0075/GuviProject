@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { resetPassword, verifyToken } from "../redux/features/user";
+import 'react-toastify/dist/ReactToastify.css';
+import {toast,ToastContainer} from 'react-toastify';
+
+toast.configure();
 
 function ResetPassword() {
   const navigate=useNavigate();
@@ -15,7 +19,23 @@ function ResetPassword() {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(resetPassword(user));
+    dispatch(resetPassword(user)).then((value)=>{
+      console.log(value.meta.requestStatus)
+      if(value.meta.requestStatus==="fulfilled"){
+        console.log("success")
+        toast.success('Password Changed Successfully', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+        navigate('/home');
+      }
+      else{
+        toast.error(value.payload.message, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+        });
+      };
+    })
   };
   useEffect(()=>{
     const token=localStorage.getItem("token");
